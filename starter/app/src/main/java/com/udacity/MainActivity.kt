@@ -9,8 +9,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.content.pm.PermissionInfo
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -31,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     private var downloadID: Long = 0
     private var downloadStatus = "Fail"
     private var selectedDownloadUri: URL? = null
-
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var notificationManager: NotificationManager
@@ -66,19 +63,8 @@ class MainActivity : AppCompatActivity() {
             if (selectedDownloadUri != null) {
                 val isConnected = isOnline(this)
                 if (isConnected) {
-                    if (ContextCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        binding.customButton.buttonState = ButtonState.Loading
-                        download()
-                    } else {
-                        requestPermissions(
-                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                            PermissionInfo.PROTECTION_DANGEROUS
-                        )
-                    }
+                    binding.customButton.buttonState = ButtonState.Loading
+                    download()
                 } else {
                     Toast.makeText(this, getString(R.string.no_network_toast), Toast.LENGTH_SHORT)
                         .show()
@@ -131,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
         pendingIntent = TaskStackBuilder.create(this).run {
             addNextIntentWithParentStack(detailIntent)
-            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+            getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
         } as PendingIntent
 
         action = NotificationCompat.Action(
@@ -147,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             applicationContext,
             NOTIFICATION_ID,
             contentIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE
         )
 
         val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
@@ -164,13 +150,14 @@ class MainActivity : AppCompatActivity() {
     private fun download() {
         val request =
             DownloadManager.Request(Uri.parse(selectedDownloadUri?.uri))
-                .setTitle(getString(R.string.app_name))
+                .setTitle(selectedDownloadUri?.title)
                 .setDescription(getString(R.string.app_description))
                 .setRequiresCharging(false)
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(false)
                 .setDestinationInExternalPublicDir(
-                    Environment.DIRECTORY_DOWNLOADS, "/repository.zip"
+                    Environment.DIRECTORY_DOWNLOADS,
+                    "/repository.zip",
                 )
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
