@@ -35,6 +35,29 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
 
+    companion object {
+        private enum class URL(val uri: String, val title: String, val text: String) {
+            GLIDE_URI(
+                "https://github.com/bumptech/glide/archive/master.zip",
+                "Glide: Image Loading Library By BumpTech",
+                "Glide repository is downloaded"
+            ),
+            UDACITY_URI(
+                "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip",
+                "Udacity: Android Kotlin Nanodegree",
+                "The Project 3 repository is downloaded"
+            ),
+            RETROFIT_URI(
+                "https://github.com/square/retrofit/archive/master.zip",
+                "Retrofit: Type-safe HTTP client by Square, Inc",
+                "Retrofit repository is downloaded"
+            ),
+        }
+
+        private const val CHANNEL_ID = "channelId"
+        private const val NOTIFICATION_ID = 0
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val pushNotificationPermissionLauncher =
@@ -190,28 +213,4 @@ class MainActivity : AppCompatActivity() {
             else -> false
         }
     }
-
-    companion object {
-        private enum class URL(val uri: String, val title: String, val text: String) {
-            GLIDE_URI(
-                "https://github.com/bumptech/glide/archive/master.zip",
-                "Glide: Image Loading Library By BumpTech",
-                "Glide repository is downloaded"
-            ),
-            UDACITY_URI(
-                "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip",
-                "Udacity: Android Kotlin Nanodegree",
-                "The Project 3 repository is downloaded"
-            ),
-            RETROFIT_URI(
-                "https://github.com/square/retrofit/archive/master.zip",
-                "Retrofit: Type-safe HTTP client by Square, Inc",
-                "Retrofit repository is downloaded"
-            ),
-        }
-
-        private const val CHANNEL_ID = "channelId"
-        private const val NOTIFICATION_ID = 0
-    }
 }
-
