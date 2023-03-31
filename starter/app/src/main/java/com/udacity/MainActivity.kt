@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         createNotificationChannel()
 
-        binding.downloadOptionsRadioGroup.setOnCheckedChangeListener { _, i ->
+        binding.mainContent.downloadOptionsRadioGroup.setOnCheckedChangeListener { _, i ->
             selectedDownloadUri = when (i) {
                 R.id.retrofit_radio_button -> URL.RETROFIT_URI
                 R.id.udacity_radio_button -> URL.UDACITY_URI
@@ -82,11 +82,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.customButton.setOnClickListener {
+        binding.mainContent.customButton.setOnClickListener {
             if (selectedDownloadUri != null) {
                 val isConnected = isOnline(this)
                 if (isConnected) {
-                    binding.customButton.buttonState = ButtonState.Loading
+                    binding.mainContent.customButton.buttonState = ButtonState.Loading
                     download()
                 } else {
                     Toast.makeText(this, getString(R.string.no_network_toast), Toast.LENGTH_SHORT)
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             if (downloadID == id) {
                 downloadStatus = "Success"
-                binding.customButton.buttonState = ButtonState.Completed
+                binding.mainContent.customButton.buttonState = ButtonState.Completed
                 createNotification()
             }
         }
@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity() {
             when (cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) {
                 DownloadManager.STATUS_FAILED -> {
                     downloadStatus = "Fail"
-                    binding.customButton.buttonState = ButtonState.Completed
+                    binding.mainContent.customButton.buttonState = ButtonState.Completed
                 }
                 DownloadManager.STATUS_SUCCESSFUL -> {
                     downloadStatus = "Success"
