@@ -20,4 +20,6 @@
     <string name="awesome_downloading_image">awesome downloading image</string>
     <string name="download">download</string>
     <string name="clicked">Clicked</string>
+    <string name="file_name">File Name:</string>
+    <string name="status">Status:</string>
 </resources>
